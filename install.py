@@ -68,11 +68,11 @@ try:
     if size >= MIN_CHARS:
         sys.exit(0)
 
-    print(
+    msg = (
         "[WORKING SUMMARY] Context threshold reached. "
-        "Run /working-summary to save context before continuing.",
-        file=sys.stderr,
+        "Run /working-summary to save context before continuing."
     )
+    print(json.dumps({"decision": "block", "reason": msg}))
     sys.exit(2)
 
 except Exception:
@@ -240,6 +240,8 @@ when the user says "working summary", "write summary", "save context".
    - What key files were read or modified?
    - What errors/gotchas were encountered?
    - What decisions were made and their rationale?
+   - What code snippets would save re-reading files post-compaction?
+   - Did the user correct any behaviors during this session?
 
 2. **WRITE SUMMARY** — Write `~/.claude/rules/working-summary.md` with this structure:
 
@@ -267,6 +269,16 @@ when the user says "working summary", "write summary", "save context".
 
    ## Gotchas & Errors
    - [things that went wrong, workarounds found]
+
+   ## Key Code
+   [2-3 snippets of code created/modified THIS session that save re-reading files]
+   [Format: `file:line` — signature or constant, 1-line what it does]
+   [Prefer: signatures, constants, data structures. Skip: full bodies, unchanged code]
+
+   ## User Corrections
+   [Behavioral corrections from the user during this session]
+   [Things like: "don't implement before discussing", "ask before acting"]
+   [Only include corrections — not preferences already in CLAUDE.md]
 
    ## Next Steps (post-compaction)
    - [ordered priority list of what to do next]

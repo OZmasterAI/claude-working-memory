@@ -61,11 +61,12 @@ try:
         sys.exit(0)
 
     # Block — summary not yet written
-    print(
+    # Use stdout JSON systemMessage so Claude sees the reason (stderr not visible in non-verbose mode)
+    msg = (
         "[WORKING SUMMARY] Context threshold reached. "
-        "Run /working-summary to save context before continuing.",
-        file=sys.stderr,
+        "Run /working-summary to save context before continuing."
     )
+    print(json.dumps({"decision": "block", "reason": msg}))
     sys.exit(2)
 
 except Exception:
